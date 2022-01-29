@@ -1,0 +1,19 @@
+image: python:3.8
+
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID               # Execute jobs in merge request context
+    - if: $CI_COMMIT_BRANCH == 'master'      # Execute jobs when a new commit is pushed to master branch
+
+stages:
+  - test
+
+
+test:
+  stage: test
+  script:
+    - export PYTHONPATH=$PWD
+    - apt-get update -qy
+    - pip install -r requirements.txt
+    - make test
+
