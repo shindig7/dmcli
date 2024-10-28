@@ -5,7 +5,7 @@ PROJECT_NAME = dmcli # replace this with project folder
 PYTHON_INTERPRETER = python
 
 ISORT = isort $(PROJECT_NAME) tests
-BLACK = black --target-version py38 $(PROJECT_NAME) tests
+BLACK = black $(PROJECT_NAME) tests
 SHELL := /bin/bash
 
 #########################
