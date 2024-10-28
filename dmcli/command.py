@@ -63,7 +63,9 @@ class Roll(Command):
             if dice_count == "":
                 dice_count = 1
 
-            rolls = [randint(1, int(dice_sides)) for _ in range(int(dice_count))]
+            rolls = [
+                randint(1, int(dice_sides)) for _ in range(int(dice_count))
+            ]
 
             out = sum(rolls) + bonus
             self.value = out

@@ -22,7 +22,9 @@ class Character(ABC):
         self.immunities = immunities
         self.resistances = resistances
 
-    def take_damage(self, dmg_amount: int, dmg_type: DamageType, magical: bool = False):
+    def take_damage(
+        self, dmg_amount: int, dmg_type: DamageType, magical: bool = False
+    ):
         if dmg_type not in self.immunities:
             if dmg_type not in self.resistances:
                 self.health -= dmg_amount

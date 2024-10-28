@@ -13,7 +13,9 @@ def test_roll_command():
 
     extreme_damage = Roll("8d6 + 8")
     d = extreme_damage.run()
-    assert all(map(lambda k: k == d, [extreme_damage.run() for _ in range(10)]))
+    assert all(
+        map(lambda k: k == d, [extreme_damage.run() for _ in range(10)])
+    )
 
 
 if __name__ == "__main__":
