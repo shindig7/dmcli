@@ -5,7 +5,7 @@ from typing import Optional
 
 from shortuuid import uuid
 
-from src.utils import get_logger
+from dmcli.utils import get_logger
 
 command_logger = get_logger("command_logger")
 

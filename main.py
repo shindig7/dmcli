@@ -1,6 +1,6 @@
 from rich.console import Console
-from src.utils import argparse
-from src.roll import roll
+from dmcli.utils import argparse
+from dmcli.roll import roll
 
 DEBUG_MODE = False
 

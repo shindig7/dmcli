@@ -1,7 +1,7 @@
 ###########
 # GLOBALS #
 ###########
-PROJECT_NAME = src # replace this with project folder
+PROJECT_NAME = dmcli # replace this with project folder
 PYTHON_INTERPRETER = python
 
 ISORT = isort $(PROJECT_NAME) tests

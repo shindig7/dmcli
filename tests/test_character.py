@@ -1,5 +1,5 @@
-from src.character import NPC, PC, Character, create_from_json
-from src.special_types import DamageType, DClass, Race
+from dmcli.character import NPC, PC, Character, create_from_json
+from dmcli.special_types import DamageType, DClass, Race
 
 
 def test_npc():

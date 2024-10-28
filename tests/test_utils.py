@@ -1,4 +1,4 @@
-from src.utils import argparse, halved
+from dmcli.utils import argparse, halved
 
 
 def test_argparse() -> None:

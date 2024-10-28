@@ -3,8 +3,8 @@ from enum import Enum
 from numbers import Number
 from typing import Dict, List, Union
 
-from src.special_types import DamageType, DClass, Race, damage_dict
-from src.utils import halved
+from dmcli.special_types import DamageType, DClass, Race, damage_dict
+from dmcli.utils import halved
 
 
 class Character(ABC):

@@ -1,6 +1,6 @@
 from rich.console import Console
 
-from src.command import Command, Roll
+from dmcli.command import Command, Roll
 
 
 def test_roll_command():
