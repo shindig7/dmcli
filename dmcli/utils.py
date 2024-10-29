@@ -3,12 +3,6 @@ from math import floor
 from typing import Any, Dict, Tuple
 
 
-def get_logger(name: str, level: int = 20) -> logging.Logger:
-    FORMAT = "[%(asctime)s] - [%(levelname)s] - [%(funcName)s] - %(message)s"
-    logging.basicConfig(level=level, format=FORMAT)
-    return logging.getLogger(name)
-
-
 def argparse(command: str) -> Tuple[str, Dict[str, Any]]:
     func, args = command.split(" ", 1)
     out_args = []
@@ -22,3 +16,19 @@ def argparse(command: str) -> Tuple[str, Dict[str, Any]]:
 
 def halved(amount: int) -> int:
     return floor(amount / 2)
+
+def get_proficiency_bonus(level: int) -> int:
+    if level < 5:
+        return 2
+    elif level < 9:
+        return 3
+    elif level < 13:
+        return 4
+    elif level < 17:
+        return 5
+    else:
+        return 6
+
+
+def get_modifier(score: int) -> int:
+    return floor((score - 10) / 2)
