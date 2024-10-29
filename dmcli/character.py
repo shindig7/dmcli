@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from numbers import Number
 from typing import Dict, List, Union
+from loguru import logger
 
 from dmcli.special_types import DamageType, DClass, Race, damage_dict
 from dmcli.utils import halved
@@ -55,6 +56,18 @@ class NPC(Character):
             resistances,
         )
         self.nickname = nickname
+
+    @staticmethod
+    def create_from_json(data) -> "NPC":
+        try:
+            return NPC(
+                name=data["name"],
+                nickname=data["nickname"],
+                health=data["health"],
+                ac=data["ac"],
+            )
+        except KeyError as K:
+            logger.error(f"Missing attribute: {K}")
 
 
 class PC(Character):
