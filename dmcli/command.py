@@ -3,9 +3,8 @@ from abc import ABC, abstractmethod
 from random import randint
 from typing import Optional
 
-from shortuuid import uuid
 from loguru import logger
-
+from shortuuid import uuid
 
 
 class Command(ABC):

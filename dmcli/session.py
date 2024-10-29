@@ -1,8 +1,9 @@
-from uuid import uuid4 as uuid
-from pathlib import Path
 import json
+from pathlib import Path
+from uuid import uuid4 as uuid
 
-from dmcli.character import PC, NPC 
+from dmcli.character import NPC, PC
+
 
 class Session:
     def __init__(self, name: str):

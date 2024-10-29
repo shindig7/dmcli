@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
-from enum import Enum
+from abc import ABC
 from numbers import Number
 from typing import Dict, List, Union
+
 from loguru import logger
 
 from dmcli.special_types import DamageType, DClass, Race, damage_dict

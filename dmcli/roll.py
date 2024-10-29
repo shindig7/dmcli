@@ -1,6 +1,5 @@
 import re
 from random import randint
-from typing import Tuple
 
 import rich
 

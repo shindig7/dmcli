@@ -1,4 +1,3 @@
-import logging
 from math import floor
 from typing import Any, Dict, Tuple
 
@@ -16,6 +15,7 @@ def argparse(command: str) -> Tuple[str, Dict[str, Any]]:
 
 def halved(amount: int) -> int:
     return floor(amount / 2)
+
 
 def get_proficiency_bonus(level: int) -> int:
     if level < 5:
