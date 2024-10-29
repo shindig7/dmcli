@@ -4,10 +4,8 @@ from random import randint
 from typing import Optional
 
 from shortuuid import uuid
+from loguru import logger
 
-from dmcli.utils import get_logger
-
-command_logger = get_logger("command_logger")
 
 
 class Command(ABC):
@@ -40,13 +38,13 @@ class Roll(Command):
             return randint(1, dice_sides)
 
         if self.executed:
-            command_logger.debug(
+            logger.debug(
                 f"Roll command {self._id} has already been "
                 "executed, returning saved value"
             )
             return self.value
         else:
-            command_logger.debug(f"Running Roll command {self._id}...")
+            logger.debug(f"Running Roll command {self._id}...")
             if self.text is None:
                 out = _roll(20)
                 self.executed = True
