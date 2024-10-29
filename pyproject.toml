@@ -11,6 +11,7 @@ rich = "^13.8.0"
 shortuuid = "^1.0.13"
 prompt-tool-kit = "^1.0.14"
 PyYAML = "^6.0.2"
+loguru = "^0.7.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"
