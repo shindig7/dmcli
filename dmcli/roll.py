@@ -1,10 +1,12 @@
 import re
-from random import randint
+import random
 
 import rich
 
+system_random = random.SystemRandom()
 
-def roll(dice_combo: str) -> None:
+def roll(dice_combo: list[str]) -> None:
+    dice_combo = dice_combo[0]
     if dice_combo == "":
         roll("1d20")
     else:
@@ -23,9 +25,10 @@ def roll(dice_combo: str) -> None:
 
         rolls = []
         for i in range(int(dice_count)):
-            rolls.append(randint(1, int(dice_sides)))
+            rolls.append(system_random.randint(1, int(dice_sides)))
 
         rich.print(sum(rolls) + bonus, str(rolls))
+        return sum(rolls) + bonus
 
 
 if __name__ == "__main__":
