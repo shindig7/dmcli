@@ -12,6 +12,9 @@ def argparse(command: str) -> Tuple[str, Dict[str, Any]]:
             out_args.append(arg)
     return tuple([func] + out_args)
 
+def strip_split(string: str, sep: str) -> list[str]:
+    return [x.strip() for x in string.split(sep)]
+
 
 def halved(amount: int) -> int:
     return floor(amount / 2)
