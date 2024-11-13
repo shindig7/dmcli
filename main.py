@@ -5,9 +5,10 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.history import FileHistory
 from rich.console import Console
 
-from dmcli.command import Roll, AbilityCheck
+from dmcli.command import AbilityCheck, Roll
 
 DEBUG_MODE = True
+
 
 class DMCLI:
     def __init__(self):
@@ -16,7 +17,9 @@ class DMCLI:
             "roll": Roll(),
             "ability": AbilityCheck(),
         }
-        self.completer = WordCompleter(list(self.commands.keys()) + ["exit", "help"])
+        self.completer = WordCompleter(
+            list(self.commands.keys()) + ["exit", "help"]
+        )
         self.session = PromptSession(
             history=FileHistory(".dmcli_history"), completer=self.completer
         )
