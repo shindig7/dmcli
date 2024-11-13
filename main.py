@@ -5,65 +5,18 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.history import FileHistory
 from rich.console import Console
 
-from dmcli.roll import roll
+from dmcli.command import Roll, AbilityCheck
 
 DEBUG_MODE = True
-
-
-def run_command(func: str, args: str) -> None:
-    command_options = {
-        "roll": roll,
-    }
-    try:
-        command_options[func](args)
-    except KeyError:
-        print("!!! COMMAND NOT RECOGNIZED !!!")
-
-
-"""
-class DMCLI(cmd.Cmd):
-    prompt = ">>> "
-    intro = "Welcome to the DM CLI. Type 'help' for a list of commands."
-
-    def do_roll(self, arg):
-        roll(arg)
-
-    def do_quit(self, arg):
-        print("Goodbye!")
-        return True
-"""
-
-
-class Command:
-    def execute(self, args, input_data=None):
-        raise NotImplementedError
-
-
-class Roll(Command):
-    def execute(self, args, input_data=None):
-        return roll(args)
-
-
-class Uppercase(Command):
-    def execute(self, args, input_data=None):
-        text = " ".join(args) if args else input_data
-        return str(text).upper()
-
-
-class Echo(Command):
-    def execute(self, args, input_data=None):
-        return " ".join(args)
-
 
 class DMCLI:
     def __init__(self):
         self.console = Console()
         self.commands = {
             "roll": Roll(),
-            "echo": Echo(),
-            "uppercase": Uppercase(),
+            "ability": AbilityCheck(),
         }
-        self.completer = WordCompleter(list(self.commands.keys()) + ["exit"])
+        self.completer = WordCompleter(list(self.commands.keys()) + ["exit", "help"])
         self.session = PromptSession(
             history=FileHistory(".dmcli_history"), completer=self.completer
         )
@@ -89,15 +42,22 @@ class DMCLI:
             pipeline.append((parts[0], parts[1:]))
         return pipeline
 
+    def help_message(self):
+        for command, obj in self.commands.items():
+            self.console.print(f"[bold]{command}[/bold]: {obj.description}")
+
     def run(self):
         while True:
             try:
                 line = self.session.prompt(">>> ")
                 if line.lower() == "exit":
                     break
+                elif line.lower() == "help":
+                    self.help_message()
+                    continue
                 pipeline = self.parse_pipeline(line)
                 result = self.execute_pipeline(pipeline)
-                self.console.print(result)
+                self.console.print(f"Result: {result}")
             except KeyboardInterrupt:
                 break
             except EOFError:
@@ -113,24 +73,3 @@ class DMCLI:
 if __name__ == "__main__":
     # console = Console()
     DMCLI().run()
-    """
-    previous_command = ""
-
-    while True:
-        try:
-            command = input(">>> ")
-            if command == "exit":
-                break
-            elif command == "":
-                if previous_command != "":
-                    run_command(*previous_command)
-            else:
-                func, args = argparse(command)
-                run_command(func, args)
-                previous_command = (func, args)
-        except Exception as e:
-            if DEBUG_MODE:
-                console.print_exception(show_locals=True)
-            else:
-                console.print(e)
-    """
