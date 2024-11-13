@@ -1,70 +1,62 @@
+import random
 import re
 from abc import ABC, abstractmethod
-from random import randint
-from typing import Optional
 
-from loguru import logger
-from shortuuid import uuid
+import rich
+
+from dmcli.utils import strip_split
 
 
 class Command(ABC):
-    def __init__(
-        self,
-        description: str,
-        text: Optional[str] = None,
-    ):
-        self.text = text
+    def __init__(self, description: str):
         self.description = description
-        self._id = uuid()
 
     @abstractmethod
-    def run(self):
-        pass
+    def execute(self, args, input_data=None):
+        raise NotImplementedError
 
 
 class Roll(Command):
-    def __init__(self, text: Optional[str] = None):
-        description = """
-        Rolls 1d20 by default, otherwise rolls anyting in the format of
-        XdY +/- Z
-        """
-        super().__init__(description=description, text=text)
-        self.executed = False
-        self.value = None
+    def __init__(self):
+        description = """Rolls 1d20 by default, otherwise rolls anything in the format of XdY +/- Z"""
+        self.system_random = random.SystemRandom()
+        super().__init__(description)
 
-    def run(self):
-        def _roll(dice_sides: int) -> int:
-            return randint(1, dice_sides)
-
-        if self.executed:
-            logger.debug(
-                f"Roll command {self._id} has already been "
-                "executed, returning saved value"
-            )
-            return self.value
+    def execute(self, args, input_data=None):
+        try:
+            dice_combo = args[0]
+        except IndexError:
+            return self.execute(["1d20"])
         else:
-            logger.debug(f"Running Roll command {self._id}...")
-            if self.text is None:
-                out = _roll(20)
-                self.executed = True
-                self.value = out
-                return out
-            elif "+" in self.text:
-                dice, bonus = self.text.split("+")
+            if "+" in dice_combo:
+                dice, bonus = strip_split(dice_combo, "+")
                 bonus = int(bonus)
-            elif "-" in self.text:
-                dice, bonus = self.text.split("-")
+            elif "-" in dice_combo:
+                dice, bonus = strip_split(dice_combo, "-")
                 bonus = int(bonus) * -1
+            else:
+                dice, bonus = dice_combo, 0
 
             dice_count, dice_sides = re.split("[dD]", dice)
             if dice_count == "":
                 dice_count = 1
 
-            rolls = [
-                randint(1, int(dice_sides)) for _ in range(int(dice_count))
-            ]
+            rolls = []
+            for _ in range(int(dice_count)):
+                rolls.append(self.system_random.randint(1, int(dice_sides)))
 
-            out = sum(rolls) + bonus
-            self.value = out
-            self.executed = True
-            return out
+            rich.print(sum(rolls) + bonus, str(rolls))
+            return sum(rolls) + bonus
+
+
+class AbilityCheck(Command):
+    def __init__(self):
+        description = """Rolls a d20 and adds the ability modifier to it"""
+        super().__init__(description)
+
+    def execute(self, args, input_data=None):
+        try:
+            bonus = int(args[0])
+        except IndexError:
+            bonus = int(input_data)
+        return Roll().execute(["1d20"]) + bonus
