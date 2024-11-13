@@ -1,12 +1,13 @@
-from rich.console import Console
+import shlex
+
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.history import FileHistory
-import shlex
+from rich.console import Console
 
 from dmcli.roll import roll
 
-DEBUG_MODE = True 
+DEBUG_MODE = True
 
 
 def run_command(func: str, args: str) -> None:
@@ -31,22 +32,28 @@ class DMCLI(cmd.Cmd):
         print("Goodbye!")
         return True
 """
+
+
 class Command:
     def execute(self, args, input_data=None):
         raise NotImplementedError
+
 
 class Roll(Command):
     def execute(self, args, input_data=None):
         return roll(args)
 
+
 class Uppercase(Command):
     def execute(self, args, input_data=None):
-        text = ' '.join(args) if args else input_data
+        text = " ".join(args) if args else input_data
         return str(text).upper()
+
 
 class Echo(Command):
     def execute(self, args, input_data=None):
-        return ' '.join(args)
+        return " ".join(args)
+
 
 class DMCLI:
     def __init__(self):
@@ -56,10 +63,9 @@ class DMCLI:
             "echo": Echo(),
             "uppercase": Uppercase(),
         }
-        self.completer = WordCompleter(list(self.commands.keys()) + ['exit'])
+        self.completer = WordCompleter(list(self.commands.keys()) + ["exit"])
         self.session = PromptSession(
-            history=FileHistory('.dmcli_history'),
-            completer=self.completer
+            history=FileHistory(".dmcli_history"), completer=self.completer
         )
 
     def execute_command(self, command, args, input_data=None):
@@ -76,18 +82,18 @@ class DMCLI:
         return input_data
 
     def parse_pipeline(self, line):
-        commands = [cmd.strip() for cmd in line.split('|')]
+        commands = [cmd.strip() for cmd in line.split("|")]
         pipeline = []
         for cmd in commands:
             parts = shlex.split(cmd)
             pipeline.append((parts[0], parts[1:]))
         return pipeline
-    
+
     def run(self):
         while True:
             try:
-                line = self.session.prompt('>>> ')
-                if line.lower() == 'exit':
+                line = self.session.prompt(">>> ")
+                if line.lower() == "exit":
                     break
                 pipeline = self.parse_pipeline(line)
                 result = self.execute_pipeline(pipeline)

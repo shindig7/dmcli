@@ -1,9 +1,10 @@
-import re
 import random
+import re
 
 import rich
 
 system_random = random.SystemRandom()
+
 
 def roll(dice_combo: list[str]) -> None:
     dice_combo = dice_combo[0]
