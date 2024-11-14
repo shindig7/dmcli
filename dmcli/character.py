@@ -1,6 +1,4 @@
 from abc import ABC
-from numbers import Number
-from typing import Dict, List, Union
 
 from loguru import logger
 
@@ -14,8 +12,8 @@ class Character(ABC):
         name: str,
         health: int,
         ac: int,
-        immunities: List[DamageType],
-        resistances: List[DamageType],
+        immunities: list[DamageType],
+        resistances: list[DamageType],
     ):
         self.name = name
         self.health = health
@@ -45,8 +43,8 @@ class NPC(Character):
         name: str,
         health: int,
         ac: int,
-        immunities: List[DamageType],
-        resistances: List[DamageType],
+        immunities: list[DamageType],
+        resistances: list[DamageType],
     ):
         super().__init__(
             name,
@@ -65,9 +63,21 @@ class NPC(Character):
                 nickname=data["nickname"],
                 health=data["health"],
                 ac=data["ac"],
+                immunities=data["immunities"],
+                resistances=data["resistances"],
             )
         except KeyError as K:
             logger.error(f"Missing attribute: {K}")
+
+    def to_dict(self) -> dict[str, int | float | str | DamageType]:
+        return {
+            "name": self.name,
+            "nickname": self.nickname,
+            "health": self.health,
+            "ac": self.AC,
+            "immunities": [x.name for x in self.immunities],
+            "resistances": [x.name for x in self.resistances],
+        }
 
 
 class PC(Character):
@@ -78,8 +88,8 @@ class PC(Character):
         race: Race,
         health: int,
         ac: int,
-        immunities: List[DamageType],
-        resistances: List[DamageType],
+        immunities: list[DamageType],
+        resistances: list[DamageType],
     ):
         super().__init__(
             name,
@@ -91,28 +101,19 @@ class PC(Character):
         self.dnd_class = dnd_class
         self.race = race
 
-
-def create_from_json(config: Dict[str, Union[str, Number]]) -> Union[NPC, PC]:
-    if config["type"] == "NPC":
-        immunities = [damage_dict.get(x) for x in config["immunities"]]
-        resistances = [damage_dict.get(x) for x in config["resistances"]]
-        return NPC(
-            name=config["name"],
-            nickname=config["nickname"],
-            health=config["health"],
-            ac=config["ac"],
-            immunities=immunities,
-            resistances=resistances,
-        )
-    elif config["type"] == "PC":
-        immunities = [damage_dict.get(x) for x in config["immunities"]]
-        resistances = [damage_dict.get(x) for x in config["resistances"]]
-        return PC(
-            name=config["name"],
-            dnd_class=config["dnd_class"],
-            race=config["race"],
-            health=config["health"],
-            ac=config["ac"],
-            immunities=immunities,
-            resistances=resistances,
-        )
+    @staticmethod
+    def create_from_json(data) -> "PC":
+        try:
+            immunities = [damage_dict.get(x) for x in data["immunities"]]
+            resistances = [damage_dict.get(x) for x in data["resistances"]]
+            return PC(
+                name=data["name"],
+                dnd_class=data["dnd_class"],
+                race=data["race"],
+                health=data["health"],
+                ac=data["ac"],
+                immunities=immunities,
+                resistances=resistances,
+            )
+        except KeyError as K:
+            logger.error(f"Missing attribute: {K}")
