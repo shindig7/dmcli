@@ -5,7 +5,8 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.history import FileHistory
 from rich.console import Console
 
-from dmcli.command import AbilityCheck, Roll
+from dmcli.command import AbilityCheck, Roll, LoadCharacter, SaveSession, NameSession
+from dmcli.session import Session
 
 DEBUG_MODE = True
 
@@ -13,14 +14,18 @@ DEBUG_MODE = True
 class DMCLI:
     def __init__(self):
         self.console = Console()
+        self.session = Session()
         self.commands = {
             "roll": Roll(),
             "ability": AbilityCheck(),
+            "load": LoadCharacter(self.session),
+            "save": SaveSession(self.session),
+            "name": NameSession(self.session),
         }
         self.completer = WordCompleter(
             list(self.commands.keys()) + ["exit", "help"]
         )
-        self.session = PromptSession(
+        self.prompt_session = PromptSession(
             history=FileHistory(".dmcli_history"), completer=self.completer
         )
 
@@ -52,7 +57,7 @@ class DMCLI:
     def run(self):
         while True:
             try:
-                line = self.session.prompt(">>> ")
+                line = self.prompt_session.prompt(">>> ")
                 if line.lower() == "exit":
                     break
                 elif line.lower() == "help":
