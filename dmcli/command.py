@@ -1,9 +1,11 @@
 import random
 import re
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 import rich
 
+from dmcli.session import Session
 from dmcli.utils import strip_split
 
 
@@ -60,3 +62,33 @@ class AbilityCheck(Command):
         except IndexError:
             bonus = int(input_data)
         return Roll().execute(["1d20"]) + bonus
+
+
+class LoadCharacter(Command):
+    def __init__(self, session: Session):
+        description = """Loads a character from a file"""
+        self.session = session
+        super().__init__(description)
+
+    def execute(self, args, input_data=None):
+        self.session.load_character(Path(args[0]))
+
+
+class SaveSession(Command):
+    def __init__(self, session: Session):
+        description = """Saves the current session to a file"""
+        self.session = session
+        super().__init__(description)
+
+    def execute(self, args, input_data=None):
+        self.session.save_session()
+
+
+class NameSession(Command):
+    def __init__(self, session: Session):
+        description = """Names the current session"""
+        self.session = session
+        super().__init__(description)
+
+    def execute(self, args, input_data=None):
+        self.session.name_session(args[0])
