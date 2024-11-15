@@ -1,4 +1,7 @@
+import rich.repr
 from abc import ABC
+from rich.pretty import pprint
+import json
 
 from loguru import logger
 
@@ -10,27 +13,57 @@ class Character(ABC):
     def __init__(
         self,
         name: str,
-        health: int,
-        ac: int,
-        immunities: list[DamageType],
-        resistances: list[DamageType],
+        nickname: str,
+        race: Race,
+        gender: str,
     ):
         self.name = name
-        self.health = health
-        self.AC = ac
-        self.immunities = immunities
-        self.resistances = resistances
+        self.nickname = nickname
+        self.race = race
+        self.gender = gender
+
+    def to_dict(self) -> dict[str, int | float | str | DamageType]:
+        return self.__dict__
+
+
+class Combatant(Character):
+    def __init__(
+        self,
+        name: str,
+        nickname: str,
+        race: Race,
+        gender: str,
+        max_hp: int,
+        current_hp: int,
+        ac: int,
+        speed: int,
+        defenses: dict[str, list[str]],
+    ):
+        self.max_hp = max_hp
+        self.current_hp = current_hp
+        self.ac = ac
+        self.defenses = defenses
+        self.speed = speed
+
+        super().__init__(
+            name,
+            nickname,
+            race,
+            gender,
+        )
 
     def take_damage(
         self, dmg_amount: int, dmg_type: DamageType, magical: bool = False
     ):
-        if dmg_type not in self.immunities:
-            if dmg_type not in self.resistances:
-                self.health -= dmg_amount
-            else:
-                self.health -= halved(dmg_amount)
+        if dmg_type in self.defenses.get("immunities", []):
+            print(f"{self.name} is immune to {str(dmg_type)}!")
+            return
         else:
-            print("Immunity bitch")
+            if dmg_type in self.defenses.get("resistances", []):
+                dmg_amount = halved(dmg_amount)
+
+            self.current_hp -= dmg_amount
+            print(f"{self.name} takes {dmg_amount} {str(dmg_type)} damage!")
 
     def heal(self, heal_amount: int):
         self.health += heal_amount
@@ -41,79 +74,71 @@ class NPC(Character):
         self,
         nickname: str,
         name: str,
-        health: int,
-        ac: int,
-        immunities: list[DamageType],
-        resistances: list[DamageType],
+        race: Race,
+        gender: str,
     ):
         super().__init__(
             name,
-            health,
-            ac,
-            immunities,
-            resistances,
+            nickname,
+            race,
+            gender,
         )
-        self.nickname = nickname
 
     @staticmethod
     def create_from_json(data) -> "NPC":
         try:
-            return NPC(
-                name=data["name"],
-                nickname=data["nickname"],
-                health=data["health"],
-                ac=data["ac"],
-                immunities=data["immunities"],
-                resistances=data["resistances"],
-            )
-        except KeyError as K:
-            logger.error(f"Missing attribute: {K}")
-
-    def to_dict(self) -> dict[str, int | float | str | DamageType]:
-        return {
-            "name": self.name,
-            "nickname": self.nickname,
-            "health": self.health,
-            "ac": self.AC,
-            "immunities": [x.name for x in self.immunities],
-            "resistances": [x.name for x in self.resistances],
-        }
+            return NPC(**data)
+        except TypeError as e:
+            logger.error(f"Missing attribute: {e}")
 
 
-class PC(Character):
+@rich.repr.auto
+class PC(Combatant):
     def __init__(
         self,
         name: str,
-        dnd_class: DClass,
+        nickname: str,
+        level: int,
         race: Race,
-        health: int,
+        gender: str,
+        dnd_class: DClass,
+        max_hp: int,
+        current_hp: int,
+        temp_hp: int,
         ac: int,
-        immunities: list[DamageType],
-        resistances: list[DamageType],
+        speed: int,
+        ability_scores: dict[str, int],
+        proficiencies: dict[str, list[str]],
+        defenses: dict[str, list[str]],
     ):
+        self.dnd_class = dnd_class
+        self.level = level
+        self.temp_hp = temp_hp
+        self.ability_scores = ability_scores
+        self.proficiencies = proficiencies
         super().__init__(
             name,
-            health,
+            nickname,
+            race,
+            gender,
+            max_hp,
+            current_hp,
             ac,
-            immunities,
-            resistances,
+            speed,
+            defenses,
         )
-        self.dnd_class = dnd_class
-        self.race = race
 
     @staticmethod
     def create_from_json(data) -> "PC":
         try:
-            immunities = [damage_dict.get(x) for x in data["immunities"]]
-            resistances = [damage_dict.get(x) for x in data["resistances"]]
-            return PC(
-                name=data["name"],
-                dnd_class=data["dnd_class"],
-                race=data["race"],
-                health=data["health"],
-                ac=data["ac"],
-                immunities=immunities,
-                resistances=resistances,
-            )
-        except KeyError as K:
-            logger.error(f"Missing attribute: {K}")
+            data.pop("type")
+            return PC(**data)
+        except TypeError as e:
+            logger.error(f"Missing attribute: {e}")
+
+
+if __name__ == "__main__":
+    with open("data/grendor_herlsson.json", "r") as f:
+        data = json.load(f)
+    pc = PC.create_from_json(data)
+    pprint(pc)
