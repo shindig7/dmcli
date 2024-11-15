@@ -36,6 +36,11 @@ class DamageType(Enum):
     SLASHING = "slashing"
     THUNDER = "thunder"
 
+class Gender(Enum):
+    MALE = "male"
+    FEMALE = "female"
+    NONBINARY = "nonbinary"
+
 
 damage_dict = {
     "acid": DamageType.ACID,
