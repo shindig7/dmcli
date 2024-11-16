@@ -13,13 +13,51 @@ class DClass(Enum):
     RANGER = "ranger"
     BLOODHUNTER = "bloodhunter"
     ARTIFICER = "artificer"
+    dclass_dict = {
+        "rogue": ROGUE,
+        "wizard": WIZARD,
+        "sorceror": SORCEROR,
+        "barbarian": BARBARIAN,
+        "fighter": FIGHTER,
+        "warlock": WARLOCK,
+        "monk": MONK,
+        "cleric": CLERIC,
+        "ranger": RANGER,
+        "bloodhunter": BLOODHUNTER,
+        "artificer": ARTIFICER,
+    }
+
+    @classmethod
+    def from_str(cls, class_str: str) -> "DamageType":
+        try:
+            return cls.damage_dict[class_str.lower()]
+        except KeyError:
+            raise KeyError(f"Invalid damage type: {class_str}")
 
 
 class Race(Enum):
+    AASIMAR = "aasimar"
     ELF = "elf"
     HALF_ELF = "half-elf"
+    HALF_ORC = "half-orc"
+    HALFLING = "halfling"
     HUMAN = "human"
-    AASIMAR = "aasimar"
+
+    race_dict = {
+        "aasimar": AASIMAR,
+        "elf": ELF,
+        "half-elf": HALF_ELF,
+        "half-orc": HALF_ORC,
+        "halfling": HALFLING,
+        "human": HUMAN,
+    }
+
+    @classmethod
+    def from_str(cls, race_str: str) -> "DamageType":
+        try:
+            return cls.race_dict[race_str.lower()]
+        except KeyError:
+            raise KeyError(f"Invalid damage type: {race_str}")
 
 
 class DamageType(Enum):
@@ -35,24 +73,30 @@ class DamageType(Enum):
     RADIANT = "radiant"
     SLASHING = "slashing"
     THUNDER = "thunder"
+    damage_dict = {
+        "acid": ACID,
+        "bludgeoning": BLUDGEONING,
+        "cold": COLD,
+        "fire": FIRE,
+        "force": FORCE,
+        "lightning": LIGHTNING,
+        "necrotic": NECROTIC,
+        "piercing": PIERCING,
+        "psychic": PSYCHIC,
+        "radiant": RADIANT,
+        "slashing": SLASHING,
+        "thunder": THUNDER,
+    }
+
+    @classmethod
+    def from_str(cls, dmg_str: str) -> "DamageType":
+        try:
+            return cls.damage_dict[dmg_str.lower()]
+        except KeyError:
+            raise KeyError(f"Invalid damage type: {dmg_str}")
 
 class Gender(Enum):
     MALE = "male"
     FEMALE = "female"
     NONBINARY = "nonbinary"
 
-
-damage_dict = {
-    "acid": DamageType.ACID,
-    "bludgeoning": DamageType.BLUDGEONING,
-    "cold": DamageType.COLD,
-    "fire": DamageType.FIRE,
-    "force": DamageType.FORCE,
-    "lightning": DamageType.LIGHTNING,
-    "necrotic": DamageType.NECROTIC,
-    "piercing": DamageType.PIERCING,
-    "psychic": DamageType.PSYCHIC,
-    "radiant": DamageType.RADIANT,
-    "slashing": DamageType.SLASHING,
-    "thunder": DamageType.THUNDER,
-}

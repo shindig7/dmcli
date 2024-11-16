@@ -5,7 +5,7 @@ import json
 
 from loguru import logger
 
-from dmcli.special_types import DamageType, DClass, Race, damage_dict
+from dmcli.special_types import DamageType, DClass, Race, Gender
 from dmcli.utils import halved
 
 
@@ -15,11 +15,11 @@ class Character(ABC):
         name: str,
         nickname: str,
         race: Race,
-        gender: str,
+        gender: Gender,
     ):
         self.name = name
         self.nickname = nickname
-        self.race = race
+        self.race = Race.from_str(race)
         self.gender = gender
 
     def to_dict(self) -> dict[str, int | float | str | DamageType]:
@@ -32,7 +32,7 @@ class Combatant(Character):
         name: str,
         nickname: str,
         race: Race,
-        gender: str,
+        gender: Gender,
         max_hp: int,
         current_hp: int,
         ac: int,
@@ -75,7 +75,7 @@ class NPC(Character):
         nickname: str,
         name: str,
         race: Race,
-        gender: str,
+        gender: Gender,
     ):
         super().__init__(
             name,
@@ -100,7 +100,7 @@ class PC(Combatant):
         nickname: str,
         level: int,
         race: Race,
-        gender: str,
+        gender: Gender,
         dnd_class: DClass,
         max_hp: int,
         current_hp: int,
@@ -111,7 +111,7 @@ class PC(Combatant):
         proficiencies: dict[str, list[str]],
         defenses: dict[str, list[str]],
     ):
-        self.dnd_class = dnd_class
+        self.dnd_class = DClass.from_str(dnd_class)
         self.level = level
         self.temp_hp = temp_hp
         self.ability_scores = ability_scores
