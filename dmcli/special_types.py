@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class DClass(Enum):
+class DClass(str, Enum):
     ROGUE = "rogue"
     WIZARD = "wizard"
     SORCEROR = "sorceror"
@@ -35,7 +35,7 @@ class DClass(Enum):
             raise KeyError(f"Invalid damage type: {class_str}")
 
 
-class Race(Enum):
+class Race(str, Enum):
     AASIMAR = "aasimar"
     ELF = "elf"
     HALF_ELF = "half-elf"
@@ -60,7 +60,7 @@ class Race(Enum):
             raise KeyError(f"Invalid damage type: {race_str}")
 
 
-class DamageType(Enum):
+class DamageType(str, Enum):
     ACID = "acid"
     BLUDGEONING = "bludgeoning"
     COLD = "cold"
@@ -95,7 +95,7 @@ class DamageType(Enum):
         except KeyError:
             raise KeyError(f"Invalid damage type: {dmg_str}")
 
-class Gender(Enum):
+class Gender(str, Enum):
     MALE = "male"
     FEMALE = "female"
     NONBINARY = "nonbinary"
