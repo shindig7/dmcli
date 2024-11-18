@@ -9,8 +9,8 @@ class Session:
     def __init__(self):
         self.name = None
         self._id = uuid()
-        self.pcs = []
-        self.npcs = []
+        self.pcs = {}
+        self.npcs = {}
         self.monsters = []
 
     def name_session(self, name: str) -> None:
@@ -23,9 +23,11 @@ class Session:
 
         match data["type"]:
             case "NPC":
-                self.npcs.append(NPC.create_from_json(data))
+                character = NPC.create_from_json(data)
+                self.npcs[character.nickname] = character
             case "PC":
-                self.pcs.append(PC.create_from_json(data))
+                character = PC.create_from_json(data)
+                self.pcs[character.nickname] = character
             case _:
                 raise ValueError(f"Invalid character type: {data['type']}")
 
@@ -35,9 +37,8 @@ class Session:
         data = {
             "name": self.name,
             "id": str(self._id),
-            "pcs": [pc.to_dict() for pc in self.pcs],
-            "npcs": [npc.to_dict() for npc in self.npcs],
-            "monsters": [monster.to_dict() for monster in self.monsters],
+            "pcs": {nickname: pc.dict() for nickname, pc in self.pcs},
+            "npcs": {nickname: npc.dict() for nickname, npc in self.npcs},
         }
         file_path = Path(f"{self.name}.json")
         with open(file_path, "w") as f:
