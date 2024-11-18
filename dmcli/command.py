@@ -92,3 +92,18 @@ class NameSession(Command):
 
     def execute(self, args, input_data=None):
         self.session.name_session(args[0])
+
+
+class StatCheck(Command):
+    def __init__(self, session: Session):
+        description = """Shows a character's stats"""
+        self.session = session
+        super().__init__(description)
+
+    def execute(self, args, input_data=None):
+        character, get_stat = args
+        character = self.session.pcs.get(
+            character, self.session.npcs.get(character)
+        )
+        character_stat = getattr(character, get_stat)
+        return character_stat

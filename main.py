@@ -5,7 +5,7 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.history import FileHistory
 from rich.console import Console
 
-from dmcli.command import AbilityCheck, Roll, LoadCharacter, SaveSession, NameSession
+from dmcli.command import AbilityCheck, Roll, LoadCharacter, SaveSession, NameSession, StatCheck
 from dmcli.session import Session
 
 DEBUG_MODE = True
@@ -21,6 +21,7 @@ class DMCLI:
             "load": LoadCharacter(self.session),
             "save": SaveSession(self.session),
             "name": NameSession(self.session),
+            "stat": StatCheck(self.session),
         }
         self.completer = WordCompleter(
             list(self.commands.keys()) + ["exit", "help"]
