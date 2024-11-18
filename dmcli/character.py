@@ -1,6 +1,4 @@
-from loguru import logger
 from pydantic import BaseModel, Field
-from rich.pretty import pprint
 
 from dmcli.special_types import DamageType, DClass, Gender, Race
 from dmcli.utils import halved

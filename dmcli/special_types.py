@@ -95,8 +95,8 @@ class DamageType(str, Enum):
         except KeyError:
             raise KeyError(f"Invalid damage type: {dmg_str}")
 
+
 class Gender(str, Enum):
     MALE = "male"
     FEMALE = "female"
     NONBINARY = "nonbinary"
-
