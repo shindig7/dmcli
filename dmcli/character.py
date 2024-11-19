@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
+from rich.console import Console
 
 from dmcli.special_types import DamageType, DClass, Gender, Race
+from dmcli.render import render_pc
 from dmcli.utils import halved
 
 
@@ -49,3 +51,6 @@ class PC(Combatant):
     ability_scores: dict[str, int]
     proficiencies: dict[str, list[str]]
     level: int = Field(ge=1)
+
+    def render(self, console: Console):
+        render_pc(self, console)
