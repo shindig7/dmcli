@@ -2,6 +2,7 @@ import random
 import re
 from abc import ABC, abstractmethod
 from pathlib import Path
+from rich.console import Console
 
 import rich
 
@@ -107,3 +108,18 @@ class StatCheck(Command):
         )
         character_stat = getattr(character, get_stat)
         return character_stat
+
+
+class Render(Command):
+    def __init__(self, session: Session, console: Console):
+        description = """Renders a character"""
+        self.session = session
+        self.console = console
+        super().__init__(description)
+
+    def execute(self, args, input_data=None):
+        character = self.session.pcs.get(
+            args[0], self.session.npcs.get(args[0])
+        )
+        character.render(self.console)
+        return character
