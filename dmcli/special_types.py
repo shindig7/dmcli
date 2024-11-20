@@ -100,3 +100,65 @@ class Gender(str, Enum):
     MALE = "male"
     FEMALE = "female"
     NONBINARY = "nonbinary"
+
+class AbilityScore(str, Enum):
+    STRENGTH = "strength"
+    DEXTERITY = "dexterity"
+    CONSTITUTION = "constitution"
+    INTELLIGENCE = "intelligence"
+    WISDOM = "wisdom"
+    CHARISMA = "charisma"
+
+    def __init__(self, *args):
+        short_name_dict = {
+            "strength": "STR",
+            "dexterity": "DEX",
+            "constitution": "CON",
+            "intelligence": "INT",
+            "wisdom": "WIS",
+            "charisma": "CHA",
+        }
+        self.short_name = short_name_dict[self.value]
+
+class Skill(str, Enum):
+    ACROBATICS = "acrobatics"
+    ANIMAL_HANDLING = "animal handling"
+    ARCANA = "arcana"
+    ATHLETICS = "athletics"
+    DECEPTION = "deception"
+    HISTORY = "history"
+    INSIGHT = "insight"
+    INTIMIDATION = "intimidation"
+    INVESTIGATION = "investigation"
+    MEDICINE = "medicine"
+    NATURE = "nature"
+    PERCEPTION = "perception"
+    PERFORMANCE = "performance"
+    PERSUAISION = "persuasion"
+    RELIGION = "religion"
+    SLEIGHT_OF_HAND = "sleight of hand"
+    STEALTH = "stealth"
+    SURVIVAL = "survival"
+
+    def __init__(self, *args):
+        mod_type_dict = {
+            "acrobatics": AbilityScore.DEXTERITY,
+            "animal handling": AbilityScore.WISDOM,
+            "arcana": AbilityScore.INTELLIGENCE,
+            "athletics": AbilityScore.STRENGTH,
+            "deception": AbilityScore.CHARISMA,
+            "history": AbilityScore.INTELLIGENCE,
+            "insight": AbilityScore.WISDOM,
+            "intimidation": AbilityScore.CHARISMA,
+            "investigation": AbilityScore.INTELLIGENCE,
+            "medicine": AbilityScore.WISDOM,
+            "nature": AbilityScore.INTELLIGENCE,
+            "perception": AbilityScore.WISDOM,
+            "performance": AbilityScore.CHARISMA,
+            "persuasion": AbilityScore.CHARISMA,
+            "religion": AbilityScore.INTELLIGENCE,
+            "sleight of hand": AbilityScore.DEXTERITY,
+            "stealth": AbilityScore.DEXTERITY,
+            "survival": AbilityScore.WISDOM,
+        }
+        self.mod_type = mod_type_dict[self.value]

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from rich.console import Console
 
-from dmcli.special_types import DamageType, DClass, Gender, Race
+from dmcli.special_types import DamageType, DClass, Gender, Race, AbilityScore
 from dmcli.render import render_pc
 from dmcli.utils import halved
 
@@ -51,7 +51,7 @@ class NPC(Character):
 class PC(Combatant):
     dnd_class: DClass
     temp_hp: int
-    ability_scores: dict[str, int]
+    ability_scores: dict[AbilityScore, int]
     proficiencies: dict[str, list[str]]
     level: int = Field(ge=1)
 
