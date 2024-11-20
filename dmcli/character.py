@@ -22,7 +22,7 @@ class Combatant(Character):
     current_hp: int
     ac: int = Field(ge=0)
     speed: int
-    defenses: dict[str, list[str]]
+    defenses: dict[str, list[DamageType]]
 
     def take_damage(
         self, dmg_amount: int, dmg_type: DamageType, magical: bool = False
@@ -38,7 +38,10 @@ class Combatant(Character):
             print(f"{self.name} takes {dmg_amount} {str(dmg_type)} damage!")
 
     def heal(self, heal_amount: int):
-        self.health += heal_amount
+        if self.current_hp + heal_amount > self.max_hp:
+            self.current_hp = self.max_hp
+        else:
+            self.current_hp += heal_amount
 
 
 class NPC(Character):
