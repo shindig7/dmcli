@@ -1,11 +1,16 @@
-from rich.text import Text
-from rich.console import Console
-from rich.table import Table
+from typing import TYPE_CHECKING
+
 from rich import box
-from rich.panel import Panel
 from rich.columns import Columns
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
 
 from dmcli.utils import get_modifier
+
+if TYPE_CHECKING:
+    from dmcli.character import PC
 
 
 def render_pc(pc: "PC", console: Console):
