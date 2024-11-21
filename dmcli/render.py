@@ -1,3 +1,4 @@
+from itertools import zip_longest
 from typing import TYPE_CHECKING
 
 from rich import box
@@ -7,8 +8,8 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from dmcli.utils import get_modifier, get_proficiency_bonus, halved
 from dmcli.special_types import Skill
+from dmcli.utils import get_modifier, get_proficiency_bonus, halved
 
 if TYPE_CHECKING:
     from dmcli.character import PC
@@ -21,8 +22,8 @@ def render_pc(pc: "PC", console: Console):
     columns = Columns(expand=True, padding=0)
 
     # Basic Info
-    basic_info = Table(expand=True, box=box.ROUNDED)
-    basic_info.add_column("Stat")
+    basic_info = Table(expand=True, box=box.ROUNDED, title="Character Details")
+    basic_info.add_column("Field", justify="right")
     basic_info.add_column("Value")
 
     basic_info.add_row("Nickname", pc.nickname)
@@ -32,10 +33,8 @@ def render_pc(pc: "PC", console: Console):
     basic_info.add_row("Gender", pc.gender.capitalize())
     basic_info.add_row("", "")
 
-    columns.add_renderable(basic_info)
-
     # Misc Stats
-    misc = Table(expand=True, box=box.ROUNDED)
+    misc = Table(expand=True, box=box.ROUNDED, title="More Details")
     misc.add_column("Stat", justify="right")
     misc.add_column("Value", justify="center")
 
@@ -49,10 +48,10 @@ def render_pc(pc: "PC", console: Console):
     misc.add_row("Proficiency Bonus", str(get_proficiency_bonus(pc.level)))
     misc.add_row("", "")
 
-    columns.add_renderable(misc)
-
     # Ability Scores
-    ability_scores = Table(expand=True, box=box.ROUNDED)
+    ability_scores = Table(
+        expand=True, box=box.ROUNDED, title="Ability Scores"
+    )
     ability_scores.add_column("Ability", justify="right")
     ability_scores.add_column("Score", justify="center", max_width=4)
     ability_scores.add_column("Modifier", justify="center", max_width=4)
@@ -62,14 +61,12 @@ def render_pc(pc: "PC", console: Console):
             ability.upper(), str(score), str(get_modifier(score))
         )
 
-    columns.add_renderable(ability_scores)
-
-    # Proficiencies
-    proficiencies = Table(expand=True, box=box.ROUNDED)
-    proficiencies.add_column("Prof", justify="center", max_width=2)
-    proficiencies.add_column("Mod", justify="center", max_width=2)
-    proficiencies.add_column("Skill", justify="right")
-    proficiencies.add_column("Bonus", justify="center", max_width=5)
+    # Skills
+    skills = Table(expand=True, box=box.ROUNDED, title="Skills")
+    skills.add_column("Prof", justify="center", max_width=2)
+    skills.add_column("Mod", justify="center", max_width=2)
+    skills.add_column("Skill", justify="right")
+    skills.add_column("Bonus", justify="center", max_width=5)
 
     for skill in list(Skill):
 
@@ -83,22 +80,53 @@ def render_pc(pc: "PC", console: Console):
         if value < 0:
             posneg = "-"
         elif value == 0:
-            posneg = ""
-       
-        proficiencies.add_row(
+            posneg = " "
+
+        skills.add_row(
             prof,
             skill.mod_type.short_name,
             skill.name.capitalize(),
             f"{posneg}{value}",
         )
 
-    columns.add_renderable(proficiencies)
+    # Passives
+    passives = Table(expand=True, box=box.ROUNDED, title="Passives")
+    passives.add_column("Perception", justify="center")
+    passives.add_column("Investigation", justify="center")
+    passives.add_column("Insight", justify="center")
 
+    passive_row_vals = []
+    for score in [Skill.PERCEPTION, Skill.INVESTIGATION, Skill.INSIGHT]:
+        value = get_modifier(pc.ability_scores[score.mod_type]) + 10
+        if score in pc.proficiencies["skills"]:
+            value += get_proficiency_bonus(pc.level)
+        passive_row_vals.append(str(value))
+
+    passives.add_row(*passive_row_vals)
+
+    # Proficiencies
+    proficiencies = Table(expand=True, box=box.ROUNDED, title="Proficiencies")
+    relevant_proficiencies = ["languages", "weapons", "armor", "tools"]
+    pd = [pc.proficiencies[k] for k in relevant_proficiencies]
+
+    for rp in relevant_proficiencies:
+        proficiencies.add_column(rp.capitalize(), justify="right")
+
+    for profs in zip_longest(*pd, fillvalue=""):
+        proficiencies.add_row(*profs)
+
+    columns.add_renderable(basic_info)
+    columns.add_renderable(misc)
+    columns.add_renderable(ability_scores)
+    columns.add_renderable(passives)
+    columns.add_renderable(proficiencies)
+    columns.add_renderable(skills)
     console.print(columns)
 
 
 if __name__ == "__main__":
     import json
+
     from dmcli.character import PC
 
     console = Console()
