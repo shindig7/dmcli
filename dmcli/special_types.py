@@ -120,6 +120,9 @@ class AbilityScore(str, Enum):
         }
         self.short_name = short_name_dict[self.value]
 
+    def __repr__(self):
+        return self.short_name
+
 class Skill(str, Enum):
     ACROBATICS = "acrobatics"
     ANIMAL_HANDLING = "animal handling"
