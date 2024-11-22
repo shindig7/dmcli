@@ -3,6 +3,7 @@ import re
 from abc import ABC, abstractmethod
 from pathlib import Path
 from rich.console import Console
+from result import Ok, Err
 
 import rich
 
@@ -29,7 +30,7 @@ class Roll(Command):
         try:
             dice_combo = args[0]
         except IndexError:
-            return self.execute(["1d20"])
+            return Ok(self.execute(["1d20"]))
         else:
             if "+" in dice_combo:
                 dice, bonus = strip_split(dice_combo, "+")
@@ -49,7 +50,7 @@ class Roll(Command):
                 rolls.append(self.system_random.randint(1, int(dice_sides)))
 
             rich.print(sum(rolls) + bonus, str(rolls))
-            return sum(rolls) + bonus
+            return Ok(sum(rolls) + bonus)
 
 
 class AbilityCheck(Command):
@@ -62,7 +63,7 @@ class AbilityCheck(Command):
             bonus = int(args[0])
         except IndexError:
             bonus = int(input_data)
-        return Roll().execute(["1d20"]) + bonus
+        return Ok(Roll().execute(["1d20"]) + bonus)
 
 
 class LoadCharacter(Command):
@@ -73,6 +74,7 @@ class LoadCharacter(Command):
 
     def execute(self, args, input_data=None):
         self.session.load_character(Path(args[0]))
+        return Ok("Character loaded")
 
 
 class SaveSession(Command):
@@ -83,6 +85,7 @@ class SaveSession(Command):
 
     def execute(self, args, input_data=None):
         self.session.save_session()
+        return Ok("Session saved")
 
 
 class NameSession(Command):
@@ -93,6 +96,7 @@ class NameSession(Command):
 
     def execute(self, args, input_data=None):
         self.session.name_session(args[0])
+        return Ok("Session named")
 
 
 class StatCheck(Command):
@@ -106,8 +110,13 @@ class StatCheck(Command):
         character = self.session.pcs.get(
             character, self.session.npcs.get(character)
         )
-        character_stat = getattr(character, get_stat)
-        return character_stat
+        if character is None:
+            return Err(f"Character {character} not found")
+        try:
+            character_stat = getattr(character, get_stat)
+            return Ok(character_stat)
+        except AttributeError:
+            return Err(f"Stat {get_stat} not found")
 
 
 class Render(Command):
@@ -122,4 +131,4 @@ class Render(Command):
             args[0], self.session.npcs.get(args[0])
         )
         character.render(self.console)
-        return character
+        return Ok(f"{character.name} rendered")

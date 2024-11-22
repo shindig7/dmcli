@@ -7,6 +7,7 @@ from rich.console import Console
 
 from dmcli.command import AbilityCheck, Roll, LoadCharacter, SaveSession, NameSession, StatCheck, Render
 from dmcli.session import Session
+from result import Err, Ok, is_ok, is_err
 
 DEBUG_MODE = True
 
@@ -38,11 +39,19 @@ class DMCLI:
             return f"Unknown command: {command}"
 
     def execute_pipeline(self, pipeline):
-        input_data = None
-        for command, args in pipeline:
-            output = self.execute_command(command, args, input_data)
-            input_data = output
-        return input_data
+        try:
+            input_data = None
+            for command, args in pipeline:
+                output = self.execute_command(command, args, input_data)
+                if is_ok(output):
+                    input_data = output.ok_value
+                else:
+                    return output
+            return input_data
+        except Exception as e:
+            if DEBUG_MODE:
+                self.console.print_exception(show_locals=True)
+            return Err(e)
 
     def parse_pipeline(self, line):
         commands = [cmd.strip() for cmd in line.split("|")]
