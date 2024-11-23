@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from uuid import uuid4 as uuid
 
-from dmcli.character import NPC, PC
+from dmcli.character import NPC, PC, Monster
 
 
 class Session:
@@ -11,7 +11,7 @@ class Session:
         self._id = uuid()
         self.pcs = {}
         self.npcs = {}
-        self.monsters = []
+        self.monsters = {}
 
     def name_session(self, name: str) -> None:
         self.name = name
@@ -28,6 +28,9 @@ class Session:
             case "PC":
                 character = PC.create_from_json(data)
                 self.pcs[character.nickname] = character
+            case "Monster":
+                character = Monster.create_from_json(data)
+                self.monsters[character.nickname] = character
             case _:
                 raise ValueError(f"Invalid character type: {data['type']}")
 
