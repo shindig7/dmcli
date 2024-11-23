@@ -27,12 +27,8 @@ class DClass(str, Enum):
         "artificer": ARTIFICER,
     }
 
-    @classmethod
-    def from_str(cls, class_str: str) -> "DamageType":
-        try:
-            return cls.damage_dict[class_str.lower()]
-        except KeyError:
-            raise KeyError(f"Invalid damage type: {class_str}")
+    def __repr__(self):
+        return self.value.title()
 
 
 class Race(str, Enum):
@@ -52,12 +48,8 @@ class Race(str, Enum):
         "human": HUMAN,
     }
 
-    @classmethod
-    def from_str(cls, race_str: str) -> "DamageType":
-        try:
-            return cls.race_dict[race_str.lower()]
-        except KeyError:
-            raise KeyError(f"Invalid damage type: {race_str}")
+    def __repr__(self):
+        return self.value.title()
 
 
 class DamageType(str, Enum):
@@ -88,18 +80,18 @@ class DamageType(str, Enum):
         "thunder": THUNDER,
     }
 
-    @classmethod
-    def from_str(cls, dmg_str: str) -> "DamageType":
-        try:
-            return cls.damage_dict[dmg_str.lower()]
-        except KeyError:
-            raise KeyError(f"Invalid damage type: {dmg_str}")
+    def __repr__(self):
+        return self.value.title()
 
 
 class Gender(str, Enum):
     MALE = "male"
     FEMALE = "female"
     NONBINARY = "nonbinary"
+
+    def __repr__(self):
+        return self.value.title()
+
 
 class AbilityScore(str, Enum):
     STRENGTH = "strength"
@@ -122,6 +114,7 @@ class AbilityScore(str, Enum):
 
     def __repr__(self):
         return self.short_name
+
 
 class Skill(str, Enum):
     ACROBATICS = "acrobatics"
@@ -165,3 +158,6 @@ class Skill(str, Enum):
             "survival": AbilityScore.WISDOM,
         }
         self.mod_type = mod_type_dict[self.value]
+
+    def __repr__(self):
+        return self.value.title()
