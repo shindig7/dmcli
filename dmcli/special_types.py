@@ -33,11 +33,16 @@ class DClass(str, Enum):
 
 class Race(str, Enum):
     AASIMAR = "aasimar"
+    DWARF = "dwarf"
+    DRAGONBORN = "dragonborn"
     ELF = "elf"
+    GNOME = "gnome"
     HALF_ELF = "half-elf"
     HALF_ORC = "half-orc"
     HALFLING = "halfling"
     HUMAN = "human"
+    KOBOLD = "kobold"
+    TIEFLING = "tiefling"
 
     race_dict = {
         "aasimar": AASIMAR,
@@ -158,6 +163,18 @@ class Skill(str, Enum):
             "survival": AbilityScore.WISDOM,
         }
         self.mod_type = mod_type_dict[self.value]
+
+    def __repr__(self):
+        return self.value.title()
+
+
+class Size(str, Enum):
+    TINY = "tiny"
+    SMALL = "small"
+    MEDIUM = "medium"
+    LARGE = "large"
+    HUGE = "huge"
+    GARGANTUAN = "gargantuan"
 
     def __repr__(self):
         return self.value.title()
