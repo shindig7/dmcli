@@ -3,11 +3,19 @@ import shlex
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.history import FileHistory
+from result import Err, is_ok
 from rich.console import Console
 
-from dmcli.command import AbilityCheck, Roll, LoadCharacter, SaveSession, NameSession, StatCheck, Render
+from dmcli.command import (
+    AbilityCheck,
+    LoadCharacter,
+    NameSession,
+    Render,
+    Roll,
+    SaveSession,
+    StatCheck,
+)
 from dmcli.session import Session
-from result import Err, Ok, is_ok, is_err
 
 DEBUG_MODE = True
 

@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 from rich.console import Console
 
-from dmcli.special_types import DamageType, DClass, Gender, Race, AbilityScore
 from dmcli.render import render_pc
+from dmcli.special_types import AbilityScore, DamageType, DClass, Gender, Race
 from dmcli.utils import halved
 
 

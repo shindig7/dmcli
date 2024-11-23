@@ -6,7 +6,6 @@ from rich.columns import Columns
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from rich.text import Text
 
 from dmcli.special_types import Skill
 from dmcli.utils import get_modifier, get_proficiency_bonus, halved

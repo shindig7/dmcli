@@ -2,10 +2,10 @@ import random
 import re
 from abc import ABC, abstractmethod
 from pathlib import Path
-from rich.console import Console
-from result import Ok, Err
 
 import rich
+from result import Err, Ok
+from rich.console import Console
 
 from dmcli.session import Session
 from dmcli.utils import strip_split
