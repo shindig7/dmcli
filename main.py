@@ -8,6 +8,8 @@ from rich.console import Console
 
 from dmcli.command import (
     AbilityCheck,
+    Damage,
+    Heal,
     LoadCharacter,
     NameSession,
     Render,
@@ -16,6 +18,7 @@ from dmcli.command import (
     StatCheck,
 )
 from dmcli.session import Session
+from dmcli.special_types import DamageType
 
 DEBUG_MODE = True
 
@@ -27,14 +30,16 @@ class DMCLI:
         self.commands = {
             "roll": Roll(),
             "ability": AbilityCheck(),
-            "load": LoadCharacter(self.session),
+            "load": LoadCharacter(self.session, self),
             "save": SaveSession(self.session),
             "name": NameSession(self.session),
             "stat": StatCheck(self.session),
             "render": Render(self.session, self.console),
+            "damage": Damage(self.session),
+            "heal": Heal(self.session),
         }
         self.completer = WordCompleter(
-            list(self.commands.keys()) + ["exit", "help"]
+            list(self.commands.keys()) + ["exit", "help"] + list(DamageType)
         )
         self.prompt_session = PromptSession(
             history=FileHistory(".dmcli_history"), completer=self.completer

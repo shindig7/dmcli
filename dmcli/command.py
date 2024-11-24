@@ -67,13 +67,15 @@ class AbilityCheck(Command):
 
 
 class LoadCharacter(Command):
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, prompt_session):
         description = """Loads a character from a file"""
         self.session = session
+        self.prompt_session = prompt_session
         super().__init__(description)
 
     def execute(self, args, input_data=None):
         self.session.load_character(Path(args[0]))
+        self.prompt_session.completer.words += list(self.session.pcs.keys())
         return Ok("Character loaded")
 
 
@@ -132,3 +134,33 @@ class Render(Command):
         )
         character.render(self.console)
         return Ok(f"{character.name} rendered")
+
+
+class Damage(Command):
+    def __init__(self, session: Session):
+        description = """Deals damage to a character"""
+        self.session = session
+        super().__init__(description)
+
+    def execute(self, args, input_data=None):
+        character, dmg_amount, dmg_type = args
+        character = self.session.pcs.get(
+            character, self.session.npcs.get(character)
+        )
+        true_dmg = character.take_damage(int(dmg_amount), dmg_type)
+        return Ok(f"{character.name} took {true_dmg} {dmg_type} damage")
+
+
+class Heal(Command):
+    def __init__(self, session: Session):
+        description = """Heals a character"""
+        self.session = session
+        super().__init__(description)
+
+    def execute(self, args, input_data=None):
+        character, heal_amount = args
+        character = self.session.pcs.get(
+            character, self.session.npcs.get(character)
+        )
+        character.heal(int(heal_amount))
+        return Ok(f"{character.name} healed {heal_amount}")
