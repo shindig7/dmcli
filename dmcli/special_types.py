@@ -70,23 +70,9 @@ class DamageType(str, Enum):
     RADIANT = "radiant"
     SLASHING = "slashing"
     THUNDER = "thunder"
-    damage_dict = {
-        "acid": ACID,
-        "bludgeoning": BLUDGEONING,
-        "cold": COLD,
-        "fire": FIRE,
-        "force": FORCE,
-        "lightning": LIGHTNING,
-        "necrotic": NECROTIC,
-        "piercing": PIERCING,
-        "psychic": PSYCHIC,
-        "radiant": RADIANT,
-        "slashing": SLASHING,
-        "thunder": THUNDER,
-    }
 
     def __repr__(self):
-        return self.value.title()
+        return self.value
 
 
 class Gender(str, Enum):
