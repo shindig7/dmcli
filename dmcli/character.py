@@ -35,16 +35,17 @@ class Combatant(BaseModel):
 
     def take_damage(
         self, dmg_amount: int, dmg_type: DamageType, magical: bool = False
-    ):
+    ) -> int:
         if dmg_type in self.defenses.get("immunities", []):
             print(f"{self.name} is immune to {str(dmg_type)}!")
-            return
+            return 0
         else:
             if dmg_type in self.defenses.get("resistances", []):
                 dmg_amount = halved(dmg_amount)
 
             self.current_hp -= dmg_amount
-            print(f"{self.name} takes {dmg_amount} {str(dmg_type)} damage!")
+            return dmg_amount
+
 
     def heal(self, heal_amount: int):
         if self.current_hp + heal_amount > self.max_hp:
@@ -54,6 +55,11 @@ class Combatant(BaseModel):
 
     def is_bloodied(self):
         return self.current_hp <= halved(self.max_hp)
+
+
+    @property
+    def hp(self):
+        return f"{self.current_hp}/{self.max_hp}"
 
     @classmethod
     def create_from_json(cls, data):
