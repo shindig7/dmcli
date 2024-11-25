@@ -7,7 +7,9 @@ from dmcli.special_types import (
     DamageType,
     DClass,
     Gender,
+    Language,
     Race,
+    Sense,
     Size,
 )
 from dmcli.utils import halved
@@ -73,8 +75,8 @@ class PC(Character, Combatant):
     temp_hp: int
     proficiencies: dict[str, list[str]]
     level: int = Field(ge=1)
-    languages: list[str]  # TODO: Enum
-    senses: list[str]  # TODO: Enum
+    languages: list[Language]
+    senses: list[Sense]
 
     def render(self, console: Console):
         render_pc(self, console)

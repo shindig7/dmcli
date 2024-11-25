@@ -164,3 +164,33 @@ class Size(str, Enum):
 
     def __repr__(self):
         return self.value.title()
+
+
+class Language(str, Enum):
+    COMMON = "common"
+    ELVISH = "elvish"
+    DWARVISH = "dwarvish"
+    DRACONIC = "draconic"
+    INFERNAL = "infernal"
+    ABYSSAL = "abyssal"
+    CELESTIAL = "celestial"
+    GIANT = "giant"
+    GNOMISH = "gnomish"
+    GOBLIN = "goblin"
+    ORC = "orc"
+    SYLVAN = "sylvan"
+    UNDERCOMMON = "undercommon"
+    THIEVES_CANT = "thieves cant"
+
+    def __repr__(self):
+        return self.value.title()
+
+
+class Sense(str, Enum):
+    DARKVISION = "darkvision"
+    BLINDSIGHT = "blindsight"
+    TRUESIGHT = "truesight"
+    TREMORSENSE = "tremorsense"
+
+    def __repr__(self):
+        return self.value.title()

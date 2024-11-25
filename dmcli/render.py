@@ -105,9 +105,10 @@ def render_pc(pc: "PC", console: Console):
 
     # Proficiencies
     proficiencies = Table(expand=True, box=box.ROUNDED, title="Proficiencies")
-    relevant_proficiencies = ["languages", "weapons", "armor", "tools"]
-    pd = [pc.proficiencies[k] for k in relevant_proficiencies]
+    relevant_proficiencies = ["weapons", "armor", "tools"]
+    pd = [pc.languages] + [pc.proficiencies[k] for k in relevant_proficiencies]
 
+    proficiencies.add_column("Languages", justify="right")
     for rp in relevant_proficiencies:
         proficiencies.add_column(rp.capitalize(), justify="right")
 
