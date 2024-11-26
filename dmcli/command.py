@@ -6,6 +6,7 @@ from pathlib import Path
 import rich
 from result import Err, Ok
 from rich.console import Console
+from prompt_toolkit import PromptSession
 
 from dmcli.session import Session
 from dmcli.utils import strip_split
@@ -67,7 +68,7 @@ class AbilityCheck(Command):
 
 
 class LoadCharacter(Command):
-    def __init__(self, session: Session, prompt_session):
+    def __init__(self, session: Session, prompt_session: PromptSession):
         description = """Loads a character from a file"""
         self.session = session
         self.prompt_session = prompt_session
@@ -167,11 +168,15 @@ class Heal(Command):
 
 
 class LoadParty(Command):
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, prompt_session: PromptSession):
         description = """Loads a party from a folder"""
         self.session = session
+        self.prompt_session = prompt_session
         super().__init__(description)
 
     def execute(self, args, input_data=None):
         self.session.load_party(Path(args[0]))
+        self.prompt_session.completer.words += list(self.session.pcs.keys())
+        self.prompt_session.completer.words += list(self.session.npcs.keys())
+        self.prompt_session.completer.words += list(self.session.monsters.keys())
         return Ok("Party loaded")

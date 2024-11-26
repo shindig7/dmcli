@@ -38,7 +38,7 @@ class DMCLI:
             "render": Render(self.session, self.console),
             "damage": Damage(self.session),
             "heal": Heal(self.session),
-            "load_party": LoadParty(self.session),
+            "load_party": LoadParty(self.session, self),
         }
         self.completer = WordCompleter(
             list(self.commands.keys()) + ["exit", "help"] + list(DamageType)
