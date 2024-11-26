@@ -4,7 +4,7 @@ from enum import Enum
 class DClass(str, Enum):
     ROGUE = "rogue"
     WIZARD = "wizard"
-    SORCEROR = "sorceror"
+    SORCERER = "sorcerer"
     BARBARIAN = "barbarian"
     FIGHTER = "fighter"
     WARLOCK = "warlock"
@@ -13,19 +13,6 @@ class DClass(str, Enum):
     RANGER = "ranger"
     BLOODHUNTER = "bloodhunter"
     ARTIFICER = "artificer"
-    dclass_dict = {
-        "rogue": ROGUE,
-        "wizard": WIZARD,
-        "sorceror": SORCEROR,
-        "barbarian": BARBARIAN,
-        "fighter": FIGHTER,
-        "warlock": WARLOCK,
-        "monk": MONK,
-        "cleric": CLERIC,
-        "ranger": RANGER,
-        "bloodhunter": BLOODHUNTER,
-        "artificer": ARTIFICER,
-    }
 
     def __repr__(self):
         return self.value.title()
