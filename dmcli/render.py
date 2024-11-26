@@ -74,6 +74,9 @@ def render_pc(pc: "PC", console: Console):
         if skill in pc.proficiencies["skills"]:
             prof = "‧"
             value += get_proficiency_bonus(pc.level)
+        if skill in pc.proficiencies["expertise"]:
+            prof = "◎"
+            value += get_proficiency_bonus(pc.level)  # Double proficiency
 
         posneg = "+"
         if value < 0:
