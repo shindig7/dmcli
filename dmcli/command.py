@@ -164,3 +164,14 @@ class Heal(Command):
         )
         character.heal(int(heal_amount))
         return Ok(f"{character.name} healed {heal_amount}")
+
+
+class LoadParty(Command):
+    def __init__(self, session: Session):
+        description = """Loads a party from a folder"""
+        self.session = session
+        super().__init__(description)
+
+    def execute(self, args, input_data=None):
+        self.session.load_party(Path(args[0]))
+        return Ok("Party loaded")

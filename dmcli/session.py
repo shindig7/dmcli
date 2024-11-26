@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 from uuid import uuid4 as uuid
 
+from result import Err, Ok, Result
+
 from dmcli.character import NPC, PC, Monster
 
 
@@ -36,7 +38,7 @@ class Session:
 
     def save_session(self) -> None:
         if self.name is None:
-            raise ValueError("Session must have a name")
+            return Err(ValueError("Session must have a name"))
         data = {
             "name": self.name,
             "id": str(self._id),
@@ -46,3 +48,30 @@ class Session:
         file_path = Path(f"{self.name}.json")
         with open(file_path, "w") as f:
             json.dump(data, f)
+
+        return Ok(f"Session saved to {file_path}")
+
+    def load_party(self, folder_path: Path) -> None:
+        for file_path in folder_path.rglob("*.json"):
+            with open(file_path, "r") as f:
+                character = json.load(f)
+            match character["type"]:
+                case "NPC":
+                    character = NPC.create_from_json(character)
+                    self.npcs[character.nickname] = character
+                case "PC":
+                    character = PC.create_from_json(character)
+                    self.pcs[character.nickname] = character
+                case "Monster":
+                    character = Monster.create_from_json(character)
+                    self.monsters[character.nickname] = character
+                case _:
+                    return Err(
+                        ValueError(
+                            f"Invalid character type: {character['type']}"
+                        )
+                    )
+        return Ok("Party loaded")
+
+    def __str__(self):
+        return f"Session: {self.name}"

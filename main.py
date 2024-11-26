@@ -11,6 +11,7 @@ from dmcli.command import (
     Damage,
     Heal,
     LoadCharacter,
+    LoadParty,
     NameSession,
     Render,
     Roll,
@@ -37,6 +38,7 @@ class DMCLI:
             "render": Render(self.session, self.console),
             "damage": Damage(self.session),
             "heal": Heal(self.session),
+            "load_party": LoadParty(self.session),
         }
         self.completer = WordCompleter(
             list(self.commands.keys()) + ["exit", "help"] + list(DamageType)
