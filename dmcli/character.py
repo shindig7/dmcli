@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import BaseModel, Field
 from rich.console import Console
 
@@ -67,7 +69,9 @@ class Combatant(BaseModel):
 
 
 class NPC(Character):
-    pass
+    bio: str
+    backstory: str
+    additional_info: dict[str, Any]
 
 
 class PC(Character, Combatant):
