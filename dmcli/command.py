@@ -4,9 +4,9 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 import rich
+from prompt_toolkit import PromptSession
 from result import Err, Ok
 from rich.console import Console
-from prompt_toolkit import PromptSession
 
 from dmcli.session import Session
 from dmcli.utils import strip_split
@@ -178,5 +178,7 @@ class LoadParty(Command):
         self.session.load_party(Path(args[0]))
         self.prompt_session.completer.words += list(self.session.pcs.keys())
         self.prompt_session.completer.words += list(self.session.npcs.keys())
-        self.prompt_session.completer.words += list(self.session.monsters.keys())
+        self.prompt_session.completer.words += list(
+            self.session.monsters.keys()
+        )
         return Ok("Party loaded")

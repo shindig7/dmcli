@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from uuid import uuid4 as uuid
 
-from result import Err, Ok, Result
+from result import Err, Ok
 
 from dmcli.character import NPC, PC, Monster
 
