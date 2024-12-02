@@ -1,16 +1,4 @@
 from math import floor
-from typing import Any, Dict, Tuple
-
-
-def argparse(command: str) -> Tuple[str, Dict[str, Any]]:
-    func, args = command.split(" ", 1)
-    out_args = []
-    for arg in args.split(" "):
-        if "," in arg:
-            out_args.append(arg.split(","))
-        else:
-            out_args.append(arg)
-    return tuple([func] + out_args)
 
 
 def strip_split(string: str, sep: str) -> list[str]:
