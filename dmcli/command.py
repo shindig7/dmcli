@@ -64,7 +64,10 @@ class AbilityCheck(Command):
             bonus = int(args[0])
         except IndexError:
             bonus = int(input_data)
-        return Ok(Roll().execute(["1d20"]) + bonus)
+        if bonus >= 0:
+            return Roll().execute([f"1d20 + {bonus}"])
+        else:
+            return Roll().execute([f"1d20 - {bonus}"])
 
 
 class LoadCharacter(Command):
