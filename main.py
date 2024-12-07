@@ -9,6 +9,7 @@ from rich.console import Console
 from dmcli.command import (
     AbilityCheck,
     Damage,
+    Generate,
     Heal,
     LoadCharacter,
     LoadParty,
@@ -39,6 +40,7 @@ class DMCLI:
             "damage": Damage(self.session),
             "heal": Heal(self.session),
             "load_party": LoadParty(self.session, self),
+            "generate": Generate(),
         }
         self.completer = WordCompleter(
             list(self.commands.keys()) + ["exit", "help"] + list(DamageType)
