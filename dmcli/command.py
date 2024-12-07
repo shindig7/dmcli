@@ -8,8 +8,8 @@ from prompt_toolkit import PromptSession  # type: ignore
 from result import Err, Ok, Result  # type: ignore
 from rich.console import Console
 
-from dmcli.session import Session
 from dmcli.generators import TavernGenerator
+from dmcli.session import Session
 from dmcli.utils import strip_split
 
 
