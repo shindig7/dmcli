@@ -4,8 +4,8 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 import rich
-from prompt_toolkit import PromptSession
-from result import Err, Ok
+from prompt_toolkit import PromptSession  # type: ignore
+from result import Err, Ok  # type: ignore
 from rich.console import Console
 
 from dmcli.session import Session
