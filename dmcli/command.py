@@ -5,10 +5,11 @@ from pathlib import Path
 
 import rich
 from prompt_toolkit import PromptSession  # type: ignore
-from result import Err, Ok  # type: ignore
+from result import Err, Ok, Result  # type: ignore
 from rich.console import Console
 
 from dmcli.session import Session
+from dmcli.generators import TavernGenerator
 from dmcli.utils import strip_split
 
 
@@ -185,3 +186,32 @@ class LoadParty(Command):
             self.session.monsters.keys()
         )
         return Ok("Party loaded")
+
+
+class Generate(Command):
+    def __init__(self):
+        description = """Generates a random tavern"""
+        super().__init__(description)
+
+    def execute(self, args, input_data=None) -> Result:
+        match args[0]:
+            case "tavern":
+                tavern = TavernGenerator().generate().ok_value["results"][0]
+                return Ok(tavern)
+
+
+class UpdateSession(Command):
+    def __init__(self, session: Session):
+        description = """Adds NPCs, towns, or monsters to the session"""
+        self.session = session
+        super().__init__(description)
+
+    def execute(self, args, input_data=None) -> Result:
+        entity_type, entity_name = args
+        if entity_type == "npc":
+            self.session.add_npc(entity_name)
+        elif entity_type == "town":
+            self.session.add_town(entity_name)
+        elif entity_type == "monster":
+            self.session.add_monster(entity_name)
+        return Ok(f"{entity_name} added to session")
