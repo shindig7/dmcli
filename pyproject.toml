@@ -15,6 +15,7 @@ loguru = "^0.7.2"
 prompt-toolkit = "^3.0.48"
 pydantic = "^2.9.2"
 result = "^0.17.0"
+requests = "^2.32.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"
